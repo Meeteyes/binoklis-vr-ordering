@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from "react";
-import DatePicker, { registerLocale } from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import TextField from "@mui/material/TextField";
+// import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import DatePicker from "@mui/lab/DatePicker";
 import { useDispatch } from "react-redux";
 import order from "../reducers/order";
 import moment from "moment";
 import { URL } from "../constants/URLS";
+import styled from "styled-components";
+
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
 
 // set the language for date picker
-import dateFnsLv from "date-fns/locale/lv";
-registerLocale("lv", dateFnsLv);
 
 // This function strips away the time from Date Object
 Date.prototype.withoutTime = function () {
@@ -17,16 +22,21 @@ Date.prototype.withoutTime = function () {
   return d;
 };
 
+const SelectContainer = styled.form`
+  width: 80%;
+  max-width: 500px;
+`;
+
 const SelectDate = () => {
   const dispatch = useDispatch();
-  const [eventDate, setEventDate] = useState(new Date());
+  const [eventDate, setEventDate] = useState();
   const [bookedDates, setBookedDates] = useState([]);
   let weekends = [];
   let disabledDates = bookedDates.map((item) => item.date);
-
+  console.log(eventDate);
   const handleDateSelect = (date) => {
     setEventDate(date);
-    dispatch(order.actions.setDate(moment(date).unix()));
+    dispatch(order.actions.setDate(date.withoutTime().toDateString()));
   };
 
   // This function mreturns an array with weekends fro next 2 years
@@ -54,7 +64,14 @@ const SelectDate = () => {
   // we make the weekends and combine with the an array of dates that was received from API
   weekends = makeWeekends();
   disabledDates = [...disabledDates, ...weekends];
-  console.log("Disabled dates", disabledDates);
+
+  const disableDays = (date) => {
+    if (disabledDates.includes(date.toDateString())) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   // In use effect we fetch from API booked dates
   useEffect(() => {
@@ -64,14 +81,15 @@ const SelectDate = () => {
   }, []);
 
   return (
-    <DatePicker
-      locale="lv"
-      minDate={new Date()}
-      selected={eventDate}
-      onChange={(date) => handleDateSelect(date)}
-      excludeDates={disabledDates.map((item) => new Date(item))}
-      placeholderText="Select a date"
-    />
+    <SelectContainer>
+      <DatePicker
+        label="Datums"
+        value={eventDate}
+        onChange={(newValue) => handleDateSelect(newValue)}
+        shouldDisableDate={disableDays}
+        renderInput={(params) => <TextField {...params} />}
+      />
+    </SelectContainer>
   );
 };
 

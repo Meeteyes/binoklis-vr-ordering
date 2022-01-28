@@ -7,7 +7,8 @@ import order from "../reducers/order";
 import { createSelectOptions } from "../constants/functions";
 
 const SelectContainer = styled.form`
-  width: 200px;
+  width: 80%;
+  max-width: 500px;
 `;
 
 const InputForm = () => {

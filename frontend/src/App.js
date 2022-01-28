@@ -6,6 +6,8 @@ import order from "./reducers/order";
 import { Provider } from "react-redux";
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
 
 import Main from "./components/Main";
 
@@ -18,11 +20,13 @@ const store = configureStore({ reducer });
 function App() {
   return (
     <Provider store={store}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Main />} />
-        </Routes>
-      </BrowserRouter>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Main />} />
+          </Routes>
+        </BrowserRouter>
+      </LocalizationProvider>
     </Provider>
   );
 }
