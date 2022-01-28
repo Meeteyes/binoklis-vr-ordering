@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,6 +18,9 @@ const InputForm = () => {
   // we create an array with a slice of store that is shown inside the Select
   const options = createSelectOptions(store.cities.list);
 
+  const handleChange = (event) => {
+    dispatch(order.actions.setCity(event.value));
+  };
   // we call thunk in redux store to fetch from API
   useEffect(() => {
     dispatch(fetchCities());
@@ -29,7 +32,7 @@ const InputForm = () => {
       <Select
         width="200px"
         options={options}
-        onChange={(event) => dispatch(order.actions.setCity(event.value))}
+        onChange={(event) => handleChange(event)}
       />
     </SelectContainer>
   );
