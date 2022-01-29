@@ -29,6 +29,8 @@ const SelectContainer = styled.form`
 
 const SelectDate = () => {
   const dispatch = useDispatch();
+
+  const today = new Date();
   const [eventDate, setEventDate] = useState();
   const [bookedDates, setBookedDates] = useState([]);
   let weekends = [];
@@ -66,7 +68,7 @@ const SelectDate = () => {
   disabledDates = [...disabledDates, ...weekends];
 
   const disableDays = (date) => {
-    if (disabledDates.includes(date.toDateString())) {
+    if (disabledDates.includes(date.toDateString() || date < new Date())) {
       return true;
     } else {
       return false;
@@ -83,6 +85,7 @@ const SelectDate = () => {
   return (
     <SelectContainer>
       <DatePicker
+        minDate={today}
         label="Datums"
         value={eventDate}
         onChange={(newValue) => handleDateSelect(newValue)}

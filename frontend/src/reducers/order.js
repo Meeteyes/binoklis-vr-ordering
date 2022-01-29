@@ -6,6 +6,7 @@ const order = createSlice({
     city: null,
     date: null,
     contactPerson: null,
+    address: null,
     email: null,
     phone: null,
     isLoading: false,
@@ -22,6 +23,9 @@ const order = createSlice({
     },
     setEmail: (store, action) => {
       store.email = action.payload;
+    },
+    setAddress: (store, action) => {
+      store.address = action.payload;
     },
     setPhone: (store, action) => {
       store.phone = action.payload;
