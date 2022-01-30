@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCities } from "../reducers/cities";
+
 import order from "../reducers/order";
+import { fetchCities } from "../reducers/cities";
 import { createSelectOptions } from "../constants/functions";
 
 const SelectContainer = styled.form`
@@ -16,7 +17,7 @@ const InputForm = () => {
   const dispatch = useDispatch();
   const store = useSelector((store) => store);
 
-  // we create an array with a slice of store that is shown inside the Select
+  // we create an array of cities that will be shown in Selector
   const options = createSelectOptions(store.cities.list);
 
   const handleChange = (event) => {
@@ -27,7 +28,6 @@ const InputForm = () => {
     dispatch(fetchCities());
   }, [dispatch]);
 
-  // Rendering the element
   return (
     <SelectContainer>
       <Select

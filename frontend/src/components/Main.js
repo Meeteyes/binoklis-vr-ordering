@@ -1,11 +1,13 @@
 import React from "react";
-import SelectDate from "./SelectDate";
-import InputForm from "./InputForm";
 import styled from "styled-components";
 import { Button } from "@mui/material";
 import student from "../img/student-icon.png";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+//Component imports
+import SelectDate from "./SelectDate";
+import InputForm from "./InputForm";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -28,6 +30,7 @@ const Image = styled.img`
 const Main = () => {
   const store = useSelector((store) => store);
   const navigate = useNavigate();
+
   const handleButtonClick = () => {
     navigate("/booking");
   };

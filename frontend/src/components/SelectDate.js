@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from "react";
-import TextField from "@mui/material/TextField";
-// import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import DatePicker from "@mui/lab/DatePicker";
 import { useDispatch } from "react-redux";
-import order from "../reducers/order";
+import TextField from "@mui/material/TextField";
+import DatePicker from "@mui/lab/DatePicker";
 import moment from "moment";
-import { URL } from "../constants/URLS";
 import styled from "styled-components";
+
+import order from "../reducers/order";
+import { URL } from "../constants/URLS";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-
-// set the language for date picker
 
 // This function strips away the time from Date Object
 Date.prototype.withoutTime = function () {
@@ -28,20 +26,21 @@ const SelectContainer = styled.form`
 `;
 
 const SelectDate = () => {
+  // variables
   const dispatch = useDispatch();
-
   const today = new Date();
   const [eventDate, setEventDate] = useState();
   const [bookedDates, setBookedDates] = useState([]);
   let weekends = [];
   let disabledDates = bookedDates.map((item) => item.date);
-  console.log(eventDate);
+
+  // functions
   const handleDateSelect = (date) => {
     setEventDate(date);
     dispatch(order.actions.setDate(date.withoutTime().toDateString()));
   };
 
-  // This function mreturns an array with weekends fro next 2 years
+  // returns an array of weekend dates for the next two years
   const makeWeekends = () => {
     let result = [];
     const today = moment();
@@ -67,6 +66,7 @@ const SelectDate = () => {
   weekends = makeWeekends();
   disabledDates = [...disabledDates, ...weekends];
 
+  // function that is being run by each date in the DatePicker, if true => disable the date
   const disableDays = (date) => {
     if (disabledDates.includes(date.toDateString() || date < new Date())) {
       return true;

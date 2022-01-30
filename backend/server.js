@@ -7,7 +7,7 @@ const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/binoklis";
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = Promise;
 
-// ---- Schema for the Order ------
+// ---- Schema for the Show ------
 const ShowSchema = new mongoose.Schema({
   city: {
     type: mongoose.Schema.Types.ObjectId,
@@ -36,7 +36,6 @@ const ShowSchema = new mongoose.Schema({
   email: {
     type: String,
     trim: true,
-    unique: true,
     required: "Email address is required",
     match: [
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
@@ -71,10 +70,9 @@ Date.prototype.withoutTime = function () {
   return d;
 };
 
-// compares the distances between the show City and rest of the cities, and returns the cities in 70km radius
+// function that compares the distances between the show City and rest of the cities, and returns array with cities in specified radius
 const getNearByCities = (cityList, showCity, radius) => {
   let result = cityList.filter((item) => {
-    // console.log(showCity.latitude);
     const distance = calculateDistance(
       item.latitude,
       item.longitude,
@@ -128,20 +126,15 @@ const qualifiesForOvernight = (showCity) => {
 
 // function that checks one day forward and one day back (eliminating the days that are on weekend)
 const stripAwayWeekends = (array) => {
-  console.log("Inside the strip function");
   const result = [];
   array.forEach((show) => {
-    // we get the previous and next day and strip away the time, so only date remains
-
     let previousDay = new Date(show.date).withoutTime();
     previousDay.setDate(previousDay.getDate() - 1);
     previousDay = previousDay.withoutTime().toDateString();
-    console.log("Inside the strip function --- previousDay ", previousDay);
 
     let nextDay = new Date(show.date).withoutTime();
     nextDay.setDate(nextDay.getDate() + 1);
     nextDay = nextDay.withoutTime().toDateString();
-    console.log("Inside the strip function --- nextDayDay ", nextDay);
 
     if (
       previousDay.substr(0, 3) === "Sat" ||
@@ -158,7 +151,6 @@ const stripAwayWeekends = (array) => {
       result.push(nextDay);
     }
   });
-  console.log("result is : ", result);
   return result;
 };
 
@@ -166,7 +158,6 @@ const port = process.env.PORT || 8080;
 const app = express();
 
 app.use(cors());
-
 app.use(express.json());
 
 // path that provides all the cities of Latvia that are in DB
@@ -179,14 +170,12 @@ app.get("/cities", async (req, res) => {
   }
 });
 
-// This path returns an aray with dates that are already booked
+// This path returns an array with dates that are already booked
 app.get("/bookedDates", async (req, res) => {
   try {
-    console.log("HAPPENING");
     const bookedDates = await Show.find({}, { date: 1, city: 1 }).populate(
       "city"
     );
-    console.log(bookedDates);
     res.status(200).json({ response: bookedDates, success: true });
   } catch (error) {
     res.status(400).json({ response: error });
@@ -208,7 +197,6 @@ app.post("/booking", async (req, res) => {
     }).save();
     res.status(201).json({ response: show, success: true });
   } catch (error) {
-    console.log("This is executed");
     res.status(400).json({ response: error, success: false });
   }
 });
@@ -216,18 +204,9 @@ app.post("/booking", async (req, res) => {
 // this path returns alternative dates for the show. Should be used before booking of the show to optimize the logistics
 app.get("/booking", async (req, res) => {
   const { city, date } = req.query;
-  const dateInText = new Date(date).withoutTime().toDateString();
-  console.log(
-    "This is the city from params: ",
-    city,
-    " This is the date from params : ",
-    date,
-    " And in text format it is : ",
-    dateInText
-  );
 
   try {
-    // we get the city List and The chosen city
+    // we get the city List and the chosen city
     const cityList = await City.find({});
     const askedCity = await City.findOne({ cityName: city });
     if (!askedCity) {
@@ -236,8 +215,8 @@ app.get("/booking", async (req, res) => {
     // see if the city is far enough (boolean)
     const isOvernight = qualifiesForOvernight(askedCity);
     if (isOvernight) {
+      // we get all the cities in 100 km radius and check if there are any upcoming shows in one of those cities
       const nearByCities = getNearByCities(cityList, askedCity, 100);
-      console.log("The near by cities are : ", nearByCities);
       let nearByShows = await Show.find({
         city: { $in: nearByCities },
       }).populate("city");
@@ -249,32 +228,15 @@ app.get("/booking", async (req, res) => {
           new Date().withoutTime().getTime()
       );
 
-      nearByShows.forEach((item, index) => {
-        console.log(
-          `There is nearby show in ${item.city.cityName} on this date `,
-          item.date
-        );
-      });
-
       //we have to check if the previous or next date is not a weekend and return the possible dates
-      console.log(
-        "This is the NERBY SHOW varable before we pass it to the function ",
-        nearByShows
-      );
 
       let availableDatesAround = stripAwayWeekends(nearByShows);
-      console.log(availableDatesAround);
-      console.log(
-        "These are availableDatesAround after striping away weekends ",
-        availableDatesAround
-      );
 
-      //now we check if those possible dates are acctualy free
+      //now we check if those possible dates are actually free
       availableDatesAround = await availableDatesAround.reduce(
         async (acc, date) => {
-          console.log(`for this ${date} query is happening`);
           const show = await Show.findOne({ date });
-          console.log("The result of the mongoDB: ", show);
+          //if no instance in MongoDB with such a date we push it to array which will be the final answer
           if (show === null) {
             return (await acc).concat(date);
           } else {
@@ -283,35 +245,21 @@ app.get("/booking", async (req, res) => {
         },
         []
       );
-      // const datesToSend = await availableDatesAround.forEach(async (item) => {
-      //   const result = [];
-      //   const show = await Show.findOne({ date });
-      //   if (show === null) {
-      //     if (!result.includes(item)) {
-      //       result.push(item);
-      //     }
-      //   }
-      // });
-
-      console.log("Avalabledates after the reduce", availableDatesAround);
-      // console.log("DateToSend after the forEach", datesToSend);
-      // const booked = await Show.findOne({ date: availableDatesAround[0] });
-      // console.log("Booked is ", booked);
 
       if ((await availableDatesAround.length) > 0) {
-        // if the date client input is also a suggested/ optimized date we do not offer alternatives
+        // if the date client chose is also among the suggested/ optimized dates we do not offer the alternative/ discount
         if (availableDatesAround.includes(date)) {
-          res.status(200).json({ response: null, success: true });
+          res.status(200).json({ response: [], success: true });
         } else {
           res
             .status(200)
             .json({ response: availableDatesAround, success: true });
         }
       } else {
-        res.status(200).json({ response: null, success: true });
+        res.status(200).json({ response: [], success: true });
       }
     } else {
-      res.status(200).json({ response: null, success: true });
+      res.status(200).json({ response: [], success: true });
     }
   } catch (error) {
     res.status(401).json({ response: error, success: false });

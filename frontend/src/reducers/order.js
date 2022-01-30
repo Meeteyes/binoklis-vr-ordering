@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { URL } from "../constants/URLS";
 
 const order = createSlice({
   name: "order",
@@ -10,6 +11,7 @@ const order = createSlice({
     email: null,
     phone: null,
     isLoading: false,
+    altDates: [],
   },
   reducers: {
     setCity: (store, action) => {
@@ -33,7 +35,23 @@ const order = createSlice({
     setIsLoading: (store, action) => {
       store.isLoading = action.payload;
     },
+    setAltDates: (store, action) => {
+      store.altDates = action.payload;
+    },
   },
 });
+
+export const fetchAlternativeDates = () => {
+  return (dispatch, getState) => {
+    const store = getState();
+    dispatch(order.actions.setIsLoading(true));
+    fetch(URL(`booking?city=${store.order.city}&date=${store.order.date}`))
+      .then((res) => res.json())
+      .then((json) => {
+        dispatch(order.actions.setAltDates(json.response));
+        dispatch(order.actions.setIsLoading(false));
+      });
+  };
+};
 
 export default order;

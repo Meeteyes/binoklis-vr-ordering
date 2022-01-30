@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector, batch } from "react-redux";
-import order from "../reducers/order";
 import { TextField, Button } from "@mui/material";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+
+import order from "../reducers/order";
+import Alternatives from "./Alternatives";
 
 const Wrapper = styled.div`
   width: 70%;
@@ -20,25 +22,17 @@ const Booking = () => {
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
-  console.log(phone);
-
-  const [hasError, setHasError] = useState({
-    name: false,
-    email: false,
-    address: false,
-  });
 
   const dispatch = useDispatch();
   const store = useSelector((store) => store);
   const navigate = useNavigate();
 
+  // Check if the e-mail has the right format
   const emailIsValid = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
-  const handleEmail = (event) => {
-    setIsValid(emailIsValid(email));
-  };
 
+  // we right to in batch
   const handleButtonClick = () => {
     batch(() => {
       dispatch(order.actions.setContactPerson(name));
@@ -51,20 +45,19 @@ const Booking = () => {
 
   return (
     <Wrapper>
-      <h1> More details please!</h1>
+      <Alternatives />
+      <h2> Please, fill the form</h2>
       <TextField
         id="name"
         label="Name"
         variant="outlined"
         onChange={(event) => setName(event.target.value)}
-        error={hasError.name}
       />
       <TextField
         id="email"
         label="E-mail"
         variant="outlined"
         onChange={(event) => setEmail(event.target.value)}
-        // error={f}
       />
       <TextField
         id="address"

@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { URL } from "../constants/URLS";
 import styled from "styled-components";
 
+import { URL } from "../constants/URLS";
+
 const Wrapper = styled.div`
-  background-color: lightblue;
-  width: 100%;
-  max-width: 900px;
-  margin: 15 auto;
+  width: 80%;
+  max-width: 700px;
+  height: 50%;
+  margin: 30px auto;
   padding: 20px 30px;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 20px;
+  border-radius: 5px;
+  background-color: #176bcc;
+  color: white;
 `;
 
 const ConfirmBooking = () => {
@@ -50,13 +56,15 @@ const ConfirmBooking = () => {
         </div>
       ) : (
         <Wrapper>
-          <h1>BOOKING CONFIRMATION:</h1>
-          <p>City: {response.city.cityName}</p>
-          <p>Date: {response.date}</p>
-          <p>ContactPerson: {response.contactPerson}</p>
-          <p>Email: {response.email}</p>
-          <p>Phone: {response.phone}</p>
-          <p>Address: {response.address}</p>
+          <form>
+            <h1>BOOKING CONFIRMATION:</h1>
+            <p>City: {response.city.cityName}</p>
+            <p>Date: {response.date}</p>
+            <p>ContactPerson: {response.contactPerson}</p>
+            <p>Email: {response.email}</p>
+            <p>Phone: {response.phone}</p>
+            <p>Address: {response.address}</p>
+          </form>
         </Wrapper>
       )}
     </>
