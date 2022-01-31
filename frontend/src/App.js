@@ -8,15 +8,21 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 //Reducers
 import cities from "./reducers/cities";
 import order from "./reducers/order";
+import admin from "./reducers/admin";
+import shows from "./reducers/shows";
 
 //Component imports
 import Booking from "./components/Booking";
 import Main from "./components/Main";
 import ConfirmBooking from "./components/ConfirmBooking";
+import Login from "./components/Login";
+import AdminDesk from "./components/AdminDesk";
 
 const reducer = combineReducers({
   cities: cities.reducer,
   order: order.reducer,
+  shows: shows.reducer,
+  admin: admin.reducer,
 });
 
 function App() {
@@ -29,6 +35,8 @@ function App() {
             <Route path="/" element={<Main />} />
             <Route path="/booking" element={<Booking />} />
             <Route path="/confirmBooking" element={<ConfirmBooking />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/adminDesk" element={<AdminDesk />} />
           </Routes>
         </BrowserRouter>
       </LocalizationProvider>

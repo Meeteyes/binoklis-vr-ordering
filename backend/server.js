@@ -77,7 +77,6 @@ const AdminSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
   },
   accessToken: {
     type: String,
@@ -224,7 +223,7 @@ app.get("/admin", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
+app.post("/signup", async (req, res) => {
   const { username, password, email } = req.body;
   console.log(username, password, email);
   const salt = bcrypt.genSaltSync();
@@ -235,6 +234,29 @@ app.post("/login", async (req, res) => {
       email,
     }).save();
     res.status(201).json({ response: newAdmin, success: true });
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
+
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    const loggedUser = await Admin.findOne({ username });
+    if (loggedUser && bcrypt.compareSync(password, loggedUser.password)) {
+      res.status(200).json({
+        response: {
+          username: loggedUser.username,
+          userId: loggedUser._id,
+          accessToken: loggedUser.accessToken,
+        },
+        success: true,
+      });
+    } else {
+      res
+        .status(401)
+        .json({ response: "User or password not found", success: false });
+    }
   } catch (error) {
     res.status(400).json({ response: error, success: false });
   }
