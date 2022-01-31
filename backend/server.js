@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
+import crypto from "crypto";
+import bcrypt from "bcrypt-nodejs";
 
 ///---- MONGO DB ---
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/binoklis";
@@ -61,8 +63,31 @@ const CitySchema = new mongoose.Schema({
   },
 });
 
+/// ---- Admin Schema -----
+const AdminSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    unique: true,
+    minLenght: 5,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  accessToken: {
+    type: String,
+    default: () => crypto.randomBytes(128).toString("hex"),
+  },
+});
+
 const Show = new mongoose.model("Show", ShowSchema);
 const City = new mongoose.model("City", CitySchema);
+const Admin = new mongoose.model("Admin", AdminSchema);
 
 Date.prototype.withoutTime = function () {
   var d = new Date(this);
@@ -154,11 +179,66 @@ const stripAwayWeekends = (array) => {
   return result;
 };
 
+//---- AUTHENTICATION
+const authenticateUser = async (req, res, next) => {
+  console.log("INSIDE FUNCTION");
+  const accessToken = req.header("Authorization");
+  console.log("accessToken ", accessToken);
+  try {
+    const loggedAdmin = await Admin.findOne({ accessToken });
+    console.log("LoogedAdmin", loggedAdmin);
+    if (loggedAdmin) {
+      next();
+    } else {
+      res.status(401).json({
+        response: {
+          message: "Please, log in",
+        },
+        success: false,
+      });
+    }
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+};
+
 const port = process.env.PORT || 8080;
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.get("/admin", authenticateUser);
+app.get("/admin", async (req, res) => {
+  console.log("Getting to authenticated page");
+  try {
+    const shows = await Show.find({});
+    console.log("SHOWS----SHOWS  : ", shows);
+    if (shows) {
+      res.status(200).json({ response: shows, success: true });
+    } else {
+      res.status(200).json({ response: "No shows found", success: true });
+    }
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
+
+app.post("/login", async (req, res) => {
+  const { username, password, email } = req.body;
+  console.log(username, password, email);
+  const salt = bcrypt.genSaltSync();
+  try {
+    const newAdmin = await new Admin({
+      username,
+      password: bcrypt.hashSync(password, salt),
+      email,
+    }).save();
+    res.status(201).json({ response: newAdmin, success: true });
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
 
 // path that provides all the cities of Latvia that are in DB
 app.get("/cities", async (req, res) => {
