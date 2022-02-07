@@ -9,6 +9,8 @@ const admin = createSlice({
     accessToken: null,
     userId: null,
     isLoading: false,
+    editingOrder: { id: null, item: [] },
+    displayDetails: false,
   },
   reducers: {
     setUsername: (store, action) => {
@@ -22,6 +24,12 @@ const admin = createSlice({
     },
     setIsLoading: (store, action) => {
       store.isLoading = action.payload;
+    },
+    setEditingOrder: (store, action) => {
+      store.editingOrder = action.payload;
+    },
+    setDisplayDetails: (store, action) => {
+      store.displayDetails = !store.displayDetails;
     },
   },
 });
@@ -52,6 +60,30 @@ export const loginUser = (username, password) => {
       })
       .finally(() => dispatch(admin.actions.setIsLoading(false)));
   };
+};
+
+export const fetchSingleShow = () => {
+  return (dispatch, getState) => {
+    dispatch(admin.actions.setIsLoading(true));
+    const store = getState();
+    const options = {
+      method: "GET",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: store.admin.accessToken,
+      },
+      referrerPolicy: "no-referrer",
+    };
+
+    dispatch(admin.actions.setIsLoading(true));
+    fetch(URL(`singleShow?id=${store.admin.editingOrder.id}`), options)
+      .then((res) => res.json())
+      .then((json) => {
+        dispatch(admin.actions.setEditingOrder({ item: json }));
+      });
+  };
+  dispatch(admin.actions.setIsLoading(false));
 };
 
 export default admin;

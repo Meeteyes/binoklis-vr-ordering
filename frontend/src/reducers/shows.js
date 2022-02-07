@@ -14,6 +14,12 @@ const shows = createSlice({
     setIsLoading: (store, action) => {
       store.isLoading = action.payload;
     },
+    setSingleShow: (store, action) => {
+      const index = store.items.findIndex(
+        (item) => item._id === action.payload._id
+      );
+      store.items[index] = action.payload;
+    },
   },
 });
 

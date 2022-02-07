@@ -44,6 +44,10 @@ const ShowSchema = new mongoose.Schema({
       "Please fill a valid email address",
     ],
   },
+  isConfirmed: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // ---- Schema for the Cities -----
@@ -180,9 +184,8 @@ const stripAwayWeekends = (array) => {
 
 //---- AUTHENTICATION
 const authenticateUser = async (req, res, next) => {
-  console.log("INSIDE FUNCTION");
   const accessToken = req.header("Authorization");
-  console.log("accessToken ", accessToken);
+  console.log("accessToken received: ", accessToken);
   try {
     const loggedAdmin = await Admin.findOne({ accessToken });
     console.log("LoogedAdmin", loggedAdmin);
@@ -211,12 +214,32 @@ app.get("/admin", authenticateUser);
 app.get("/admin", async (req, res) => {
   console.log("Getting to authenticated page");
   try {
-    const shows = await Show.find({});
+    const shows = await Show.find({}).populate("city");
     console.log("SHOWS----SHOWS  : ", shows);
     if (shows) {
       res.status(200).json({ response: shows, success: true });
     } else {
       res.status(200).json({ response: "No shows found", success: true });
+    }
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
+app.patch("/updateShow", authenticateUser);
+app.patch("/updateShow", async (req, res) => {
+  const { id, contactPerson, email, phone, address, isConfirmed } = req.body;
+  try {
+    const show = await Show.findOneAndUpdate(
+      { _id: id },
+      { contactPerson, email, phone, address, isConfirmed },
+      { new: true }
+    ).populate("city");
+    if (show) {
+      res.status(200).json({ response: show, success: true });
+    } else {
+      res
+        .status(200)
+        .json({ response: "Event with such id not found", success: false });
     }
   } catch (error) {
     res.status(400).json({ response: error, success: false });
