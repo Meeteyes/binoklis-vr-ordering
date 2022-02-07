@@ -26,9 +26,6 @@ const shows = createSlice({
 export const fetchShows = () => {
   return (dispatch, getState) => {
     const store = getState();
-    console.log(store);
-    console.log("THIS IS ACCESSTOKEN", store.admin.accessToken);
-    console.log(JSON.stringify(store.admin.accessToken));
     const options = {
       method: "GET",
       credentials: "same-origin",

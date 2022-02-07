@@ -2,8 +2,6 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchShows } from "../reducers/shows";
-// import OrdersAccordion from "./OrdersAccordion";
-// import AdminTable from "./AdminTable";
 import AdminGrid from "./AdminGrid";
 
 const AdminDesk = () => {
@@ -13,7 +11,11 @@ const AdminDesk = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(fetchShows());
+    if (store.admin.accessToken) {
+      dispatch(fetchShows());
+    } else {
+      navigate("/login");
+    }
   }, [store.admin.accessToken]);
 
   if (store.shows.items.length > 0) {
@@ -21,17 +23,22 @@ const AdminDesk = () => {
       (item) => item.isConfirmed === false
     );
   }
-  console.log(unconfirmed);
   return (
-    <div>
-      <h1>ADMIN DESK</h1>
-      {unconfirmed.length > 0 && (
+    <>
+      {store.admin.accessToken ? (
         <div>
-          You have <span>{unconfirmed.length}</span> unconfirmed orders!
+          <h1>ADMIN DESK</h1>
+          {unconfirmed.length > 0 && (
+            <div>
+              You have <span>{unconfirmed.length}</span> unconfirmed orders!
+            </div>
+          )}
+          {store.shows.items.length > 0 && <AdminGrid />}
         </div>
+      ) : (
+        <></>
       )}
-      {store.shows.items.length > 0 && <AdminGrid />}
-    </div>
+    </>
   );
 };
 

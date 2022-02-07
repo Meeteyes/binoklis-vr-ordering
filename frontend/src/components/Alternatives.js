@@ -31,7 +31,9 @@ const Alternatives = () => {
 
   // on Mount we fetch for alternative Date, a function written in redux thunk and reading state property so no props needed
   useEffect(() => {
-    dispatch(fetchAlternativeDates());
+    if (store.order.city && store.order.date) {
+      dispatch(fetchAlternativeDates());
+    }
   }, [dispatch]);
 
   // we either offer alternatives or confirm that the date is free

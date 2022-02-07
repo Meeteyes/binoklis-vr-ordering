@@ -32,7 +32,7 @@ const Booking = () => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
-  // we right to in batch
+  // we write in Redux store in batch
   const handleButtonClick = () => {
     batch(() => {
       dispatch(order.actions.setContactPerson(name));
@@ -42,6 +42,12 @@ const Booking = () => {
     });
     navigate("/confirmBooking");
   };
+
+  useEffect(() => {
+    if (store.order.city === null || store.order.date === null) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <Wrapper>

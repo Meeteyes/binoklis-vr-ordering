@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 import { URL } from "../constants/URLS";
 
@@ -24,6 +25,7 @@ const ConfirmBooking = () => {
   const store = useSelector((store) => store.order);
   const [isLoading, setIsLoading] = useState(true);
   const [response, setResponse] = useState();
+  const navigate = useNavigate();
 
   const options = {
     method: "POST",
@@ -43,10 +45,14 @@ const ConfirmBooking = () => {
   };
 
   useEffect(() => {
-    fetch(URL("booking"), options)
-      .then((res) => res.json())
-      .then((json) => setResponse(json.response))
-      .finally(() => setIsLoading(false));
+    if (store.city && store.date && store.contactPerson && store.email) {
+      fetch(URL("booking"), options)
+        .then((res) => res.json())
+        .then((json) => setResponse(json.response))
+        .finally(() => setIsLoading(false));
+    } else {
+      navigate("/");
+    }
   }, []);
   return (
     <>
