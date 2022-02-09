@@ -25,4 +25,19 @@ router.patch("/", async (req, res) => {
   }
 });
 
+router.delete("/", authenticateUser);
+router.delete("/", async (req, res) => {
+  const { id } = req.query;
+  if (id) {
+    try {
+      const deletedItem = await Show.deleteOne({ _id: id });
+      res.status(200).json({ response: "Item was deleted", success: true });
+    } catch (error) {
+      res.status(400).json({ response: error, success: false });
+    }
+  } else {
+    res.status(400).json({ response: "Id must be provided", success: false });
+  }
+});
+
 export default router;

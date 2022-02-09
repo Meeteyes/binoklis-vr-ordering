@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { TextField, Button } from "@mui/material";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 import admin, { loginUser } from "../reducers/admin";
+import Loader from "./Loader";
 
 const Wrapper = styled.div`
   width: 70%;
@@ -16,6 +17,7 @@ const Wrapper = styled.div`
   gap: 20px;
 `;
 const Login = () => {
+  const store = useSelector((store) => store);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
@@ -23,11 +25,18 @@ const Login = () => {
 
   const handleButtonClick = () => {
     dispatch(loginUser(username, password));
-    navigate("/adminDesk");
+    setTimeout(navigate("/adminDesk"), 2000);
   };
+
+  useEffect(() => {
+    if (store.admin.accessToken) {
+      navigate("/adminDesk");
+    }
+  }, [store.admin.accessToken]);
 
   return (
     <Wrapper>
+      <Loader />
       <h1>PLEASE LOGIN</h1>
       <TextField
         id="username"

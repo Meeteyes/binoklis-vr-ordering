@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 import order from "../reducers/order";
 import Alternatives from "./Alternatives";
+import ui from "../reducers/ui";
 
 const Wrapper = styled.div`
   width: 70%;
@@ -22,27 +23,45 @@ const Booking = () => {
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
+  const [errors, setErrors] = useState({ name: "", email: "", phone: "" });
 
   const dispatch = useDispatch();
   const store = useSelector((store) => store);
   const navigate = useNavigate();
+
+  // validates the form and stores error messages in state obj or empty string if validation passes
+  const validateForm = () => {
+    let temp = {};
+    temp.name = name.length > 2 ? "" : "Name is required";
+    temp.email = emailIsValid(email) ? "" : "Invalid e-mail";
+    temp.phone = phone.length === 8 ? "" : "Phone number must be 8 digits";
+    setErrors({
+      ...temp,
+    });
+    // we return boolean value depending if all properties are empty strings or not
+    return Object.values(temp).every((x) => x === "");
+  };
 
   // Check if the e-mail has the right format
   const emailIsValid = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
-  // we write in Redux store in batch
-  const handleButtonClick = () => {
-    batch(() => {
-      dispatch(order.actions.setContactPerson(name));
-      dispatch(order.actions.setEmail(email));
-      dispatch(order.actions.setAddress(address));
-      dispatch(order.actions.setPhone(phone));
-    });
-    navigate("/confirmBooking");
+  // initiats the validation of the form and we write in Redux store in batch
+  const handleButtonClick = async () => {
+    if (validateForm()) {
+      batch(() => {
+        dispatch(order.actions.setContactPerson(name));
+        dispatch(order.actions.setEmail(email));
+        dispatch(order.actions.setAddress(address));
+        dispatch(order.actions.setPhone(phone));
+        dispatch(ui.actions.setLoading(true));
+      });
+      navigate("/confirmBooking");
+    }
   };
 
+  // if somehow this page is reached not in the planed flow it redirects to the beginning of the input form
   useEffect(() => {
     if (store.order.city === null || store.order.date === null) {
       navigate("/");
@@ -55,12 +74,16 @@ const Booking = () => {
       <h2> Please, fill the form</h2>
       <TextField
         id="name"
+        error={errors.name.length > 0}
+        helperText={errors.name}
         label="Name"
         variant="outlined"
         onChange={(event) => setName(event.target.value)}
       />
       <TextField
         id="email"
+        error={errors.email.length > 0}
+        helperText={errors.email}
         label="E-mail"
         variant="outlined"
         onChange={(event) => setEmail(event.target.value)}
@@ -74,6 +97,8 @@ const Booking = () => {
       <TextField
         id="phone"
         label="Phone"
+        error={errors.phone.length > 0}
+        helperText={errors.phone}
         variant="outlined"
         onChange={(event) => setPhone(event.target.value)}
       />
@@ -83,7 +108,7 @@ const Booking = () => {
         style={{ width: "80%", maxWidth: "250px" }}
         variant="contained"
         onClick={() => handleButtonClick()}
-        disabled={email.length < 3 || name.length < 3 || !emailIsValid(email)}
+        disabled={email.length < 3 || name.length < 3}
       >
         Book
       </Button>

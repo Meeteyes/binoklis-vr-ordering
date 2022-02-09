@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 import { URL } from "../constants/URLS";
+import ui from "../reducers/ui";
+import Loader from "./Loader";
 
 const Wrapper = styled.div`
   width: 80%;
@@ -22,10 +24,13 @@ const Wrapper = styled.div`
 `;
 
 const ConfirmBooking = () => {
-  const store = useSelector((store) => store.order);
-  const [isLoading, setIsLoading] = useState(true);
+  const store = useSelector((store) => store);
+  // const [isLoading, setIsLoading] = useState(true);
   const [response, setResponse] = useState();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  console.log(store);
+  // console.log("this is the isLoading prop", store.ui.isLoading);
 
   const options = {
     method: "POST",
@@ -35,31 +40,34 @@ const ConfirmBooking = () => {
     },
     referrerPolicy: "no-referrer",
     body: JSON.stringify({
-      city: store.city,
-      address: store.address,
-      date: store.date,
-      contactPerson: store.contactPerson,
-      phone: store.phone,
-      email: store.email,
+      city: store.order.city,
+      address: store.order.address,
+      date: store.order.date,
+      contactPerson: store.order.contactPerson,
+      phone: store.order.phone,
+      email: store.order.email,
     }),
   };
 
   useEffect(() => {
-    if (store.city && store.date && store.contactPerson && store.email) {
+    if (
+      store.order.city &&
+      store.order.date &&
+      store.order.contactPerson &&
+      store.order.email
+    ) {
       fetch(URL("booking"), options)
         .then((res) => res.json())
         .then((json) => setResponse(json.response))
-        .finally(() => setIsLoading(false));
+        .finally(() => dispatch(ui.actions.setLoading(false)));
     } else {
       navigate("/");
     }
   }, []);
   return (
     <>
-      {isLoading ? (
-        <div>
-          <p>LOADING</p>
-        </div>
+      {store.ui.isLoading ? (
+        <Loader />
       ) : (
         <Wrapper>
           <form>

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-
 import order from "../reducers/order";
 import { fetchCities } from "../reducers/cities";
 import { createSelectOptions } from "../constants/functions";
@@ -12,7 +11,7 @@ const SelectContainer = styled.form`
   max-width: 500px;
 `;
 
-const InputForm = () => {
+const SelectCity = () => {
   // ----- variables -----
   const dispatch = useDispatch();
   const store = useSelector((store) => store);
@@ -39,4 +38,4 @@ const InputForm = () => {
   );
 };
 
-export default InputForm;
+export default SelectCity;

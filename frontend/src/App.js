@@ -10,6 +10,7 @@ import cities from "./reducers/cities";
 import order from "./reducers/order";
 import admin from "./reducers/admin";
 import shows from "./reducers/shows";
+import ui from "./reducers/ui";
 
 //Component imports
 import Booking from "./components/Booking";
@@ -23,6 +24,7 @@ const reducer = combineReducers({
   order: order.reducer,
   shows: shows.reducer,
   admin: admin.reducer,
+  ui: ui.reducer,
 });
 
 function App() {

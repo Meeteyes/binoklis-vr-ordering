@@ -18,9 +18,10 @@ import {
   AlertTitle,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import admin, { fetchSingleShow } from "../reducers/admin";
-import shows from "../reducers/shows";
+import admin from "../reducers/admin";
+import shows, { fetchShows } from "../reducers/shows";
 import { URL } from "../constants/URLS";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -75,15 +76,16 @@ const Popup = () => {
   const [email, setEmail] = useState(showToChange.email);
   const [address, setAddress] = useState(showToChange.address);
   const [isConfirmed, setIsConfirmed] = useState(showToChange.isConfirmed);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   //to show the error or success
   const [afterPatchMessage, setAfterPatchMessage] = useState();
 
   const dispatch = useDispatch();
 
-  const handleClickOpen = () => {
-    setOpen(!open);
-  };
+  // const handleClickOpen = () => {
+  //   setOpen(!open);
+  // };
   const handleClose = () => {
     setOpen(false);
     dispatch(admin.actions.setDisplayDetails());
@@ -121,19 +123,44 @@ const Popup = () => {
           setAfterPatchMessage("error");
         }
       });
-    // HERE WE WRITE THE PATCH CALL
-    // setOpen(false);
   };
 
-  // useEffect(() => {
-  //   dispatch(fetchSingleShow());
-  // }, []);
+  const deleteFromServer = () => {
+    const options = {
+      method: "DELETE",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: store.admin.accessToken,
+      },
+      referrerPolicy: "no-referrer",
+    };
+
+    fetch(URL(`updateShow?id=${showToChange._id}`), options)
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success) {
+          setOpen(false);
+          dispatch(admin.actions.setDisplayDetails(false));
+          dispatch(fetchShows());
+        }
+      });
+  };
+
+  const giveDeleteOption = () => {
+    setConfirmDelete(true);
+  };
+  const handleDeleteConfirmation = (choice) => {
+    if (!choice) {
+      setConfirmDelete(false);
+    } else {
+      deleteFromServer();
+      setOpen(false);
+    }
+  };
 
   return (
     <div>
-      {/* <Button variant="outlined" onClick={handleClickOpen}>
-        Open dialog
-      </Button> */}
       {store.admin.isLoading === false && (
         <BootstrapDialog
           onClose={handleClose}
@@ -202,9 +229,37 @@ const Popup = () => {
                   }
                   label="Confirmed?"
                 />
+                {!confirmDelete && (
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={giveDeleteOption}
+                    startIcon={<DeleteIcon />}
+                  >
+                    Delete
+                  </Button>
+                )}
               </FormGroup>
             </Typography>
             <Typography component={"div"} gutterBottom>
+              {confirmDelete && (
+                <Alert severity="warning">
+                  <p>Are you sure you want to delete this order?</p>
+                  <Button
+                    variant="outlined"
+                    onClick={() => handleDeleteConfirmation(false)}
+                  >
+                    No!
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={() => handleDeleteConfirmation(true)}
+                  >
+                    Yes, delete!
+                  </Button>
+                </Alert>
+              )}
               {afterPatchMessage && (
                 <Alert severity={afterPatchMessage}>
                   <AlertTitle>{afterPatchMessage}</AlertTitle>

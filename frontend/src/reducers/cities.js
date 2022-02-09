@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import ui from "./ui";
 
 const cities = createSlice({
   name: "cities",
@@ -18,13 +19,13 @@ const cities = createSlice({
 
 export const fetchCities = () => {
   return (dispatch) => {
-    dispatch(cities.actions.setLoading(true));
+    dispatch(ui.actions.setLoading(true));
     fetch("http://localhost:8080/cities")
       .then((res) => res.json())
       .then((json) => {
         dispatch(cities.actions.setList(json.response));
-        dispatch(cities.actions.setLoading(false));
-      });
+      })
+      .finally(() => dispatch(ui.actions.setLoading(false)));
   };
 };
 

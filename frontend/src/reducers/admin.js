@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { batch } from "react-redux";
 import { URL } from "../constants/URLS";
+import ui from "./ui";
 
 const admin = createSlice({
   name: "admin",
@@ -48,7 +49,7 @@ export const loginUser = (username, password) => {
     }),
   };
   return (dispatch) => {
-    dispatch(admin.actions.setIsLoading(true));
+    dispatch(ui.actions.setLoading(true));
     fetch(URL("login"), options)
       .then((res) => res.json())
       .then((json) => {
@@ -58,32 +59,8 @@ export const loginUser = (username, password) => {
           dispatch(admin.actions.setAccessToken(json.response.accessToken));
         });
       })
-      .finally(() => dispatch(admin.actions.setIsLoading(false)));
+      .finally(() => dispatch(ui.actions.setLoading(false)));
   };
-};
-
-export const fetchSingleShow = () => {
-  return (dispatch, getState) => {
-    dispatch(admin.actions.setIsLoading(true));
-    const store = getState();
-    const options = {
-      method: "GET",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: store.admin.accessToken,
-      },
-      referrerPolicy: "no-referrer",
-    };
-
-    dispatch(admin.actions.setIsLoading(true));
-    fetch(URL(`singleShow?id=${store.admin.editingOrder.id}`), options)
-      .then((res) => res.json())
-      .then((json) => {
-        dispatch(admin.actions.setEditingOrder({ item: json }));
-      });
-  };
-  dispatch(admin.actions.setIsLoading(false));
 };
 
 export default admin;
