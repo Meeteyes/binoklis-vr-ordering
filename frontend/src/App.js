@@ -4,6 +4,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import styled from "styled-components";
 
 //Reducers
 import cities from "./reducers/cities";
@@ -27,22 +28,28 @@ const reducer = combineReducers({
   ui: ui.reducer,
 });
 
+const AppWrapper = styled.div`
+  height: 100%;
+`;
+
 function App() {
   const store = configureStore({ reducer });
   return (
-    <Provider store={store}>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Main />} />
-            <Route path="/booking" element={<Booking />} />
-            <Route path="/confirmBooking" element={<ConfirmBooking />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/adminDesk" element={<AdminDesk />} />
-          </Routes>
-        </BrowserRouter>
-      </LocalizationProvider>
-    </Provider>
+    <AppWrapper>
+      <Provider store={store}>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Main />} />
+              <Route path="/booking" element={<Booking />} />
+              <Route path="/confirmBooking" element={<ConfirmBooking />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/adminDesk" element={<AdminDesk />} />
+            </Routes>
+          </BrowserRouter>
+        </LocalizationProvider>
+      </Provider>
+    </AppWrapper>
   );
 }
 

@@ -1,11 +1,34 @@
 import { Button } from "@mui/material";
-
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchShows } from "../reducers/shows";
 import admin from "../reducers/admin";
 import AdminGrid from "./AdminGrid";
+import styled from "styled-components";
+import Logo from "../img/binoklis.png";
+
+const Wrapper = styled.div`
+  width: 100%;
+  height: 100vh;
+  padding: 50px 100px 10px 100px;
+`;
+const Header = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+const Red = styled.span`
+  color: red;
+`;
+
+const LogoImg = styled.img`
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 20%;
+`;
 
 const AdminDesk = () => {
   const store = useSelector((store) => store);
@@ -25,6 +48,7 @@ const AdminDesk = () => {
     }
   }, [store.admin.accessToken]);
 
+  // stores all the unconfirmed shows in a local array
   if (store.shows.items.length > 0) {
     unconfirmed = store.shows.items.filter(
       (item) => item.isConfirmed === false
@@ -33,18 +57,21 @@ const AdminDesk = () => {
   return (
     <>
       {store.admin.accessToken ? (
-        <div>
-          <h1>ADMIN DESK</h1>
-          <Button variant="outlined" onClick={logout}>
-            Logout
-          </Button>
-          {unconfirmed.length > 0 && (
-            <div>
-              You have <span>{unconfirmed.length}</span> unconfirmed orders!
-            </div>
-          )}
+        <Wrapper>
+          <Header>
+            <LogoImg src={Logo} alt="Company Binoklis Logo" />
+            <h1>ADMIN DESK</h1>
+            {unconfirmed.length > 0 && (
+              <div>
+                You have <Red>{unconfirmed.length}</Red> unconfirmed orders!
+              </div>
+            )}
+            <Button variant="outlined" onClick={logout}>
+              Logout
+            </Button>
+          </Header>
           {store.shows.items.length > 0 && <AdminGrid />}
-        </div>
+        </Wrapper>
       ) : (
         <></>
       )}

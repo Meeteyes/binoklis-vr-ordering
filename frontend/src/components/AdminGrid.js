@@ -11,6 +11,10 @@ Date.prototype.withoutTime = function () {
   d.setHours(12, 0, 0, 0);
   return d;
 };
+const Wrapper = styled.div`
+  width: 100%;
+  height: 70vh;
+`;
 
 const ButtonWrapper = styled.div`
   width: 100%;
@@ -26,6 +30,8 @@ const AdminGrid = () => {
   const dispatch = useDispatch();
   // This property will control what kind of data is displayed
   const [displayMode, setDisplayMode] = useState("all");
+
+  // define the columns for the grid
   const columns = [
     { field: "id", headerName: "ID", width: 110 },
     {
@@ -111,7 +117,7 @@ const AdminGrid = () => {
   };
 
   return (
-    <div style={{ height: 800, width: "100%" }}>
+    <Wrapper>
       <ButtonWrapper>
         <Button
           style={{ width: "80%", maxWidth: "250px" }}
@@ -169,10 +175,14 @@ const AdminGrid = () => {
         density="comfortable"
         disableSelectionOnClick
         editMode="row"
+        sx={{
+          width: "100%",
+          height: "70vh", // maxWidth: "1200px",
+        }}
         onRowClick={(e) => handleRow(e)}
       />
       {store.admin.displayDetails && <Popup />}
-    </div>
+    </Wrapper>
   );
 };
 

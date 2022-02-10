@@ -1,3 +1,6 @@
+html {
+  height: 100%;
+}
 .App {
   text-align: center;
 }
@@ -26,6 +29,14 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.date-container {
+  width: 250px;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
 }
 
 @keyframes App-logo-spin {

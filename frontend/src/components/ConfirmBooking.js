@@ -6,31 +6,51 @@ import { useNavigate } from "react-router-dom";
 import { URL } from "../constants/URLS";
 import ui from "../reducers/ui";
 import Loader from "./Loader";
+import Space from "../img/space.png";
 
 const Wrapper = styled.div`
+  width: 100%;
+  height: 100vh;
+  padding-top: 50px;
+  background-color: #6ba987;
+`;
+
+const ContentContainer = styled.div`
+  background-color: white;
   width: 80%;
-  max-width: 700px;
-  height: 50%;
-  margin: 30px auto;
-  padding: 20px 30px;
+  margin: 0px auto;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   gap: 20px;
-  border-radius: 5px;
-  background-color: #176bcc;
-  color: white;
+  border-radius: 20px;
+`;
+const SpaceIcon = styled.img`
+  width: 150px;
+`;
+const Span = styled.span`
+  color: red;
+  display: block;
+  text-align: center;
+`;
+const SpanBold = styled.span`
+  font-weight: 700;
+  color: green;
+`;
+const OrderCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 20px;
 `;
 
 const ConfirmBooking = () => {
   const store = useSelector((store) => store);
-  // const [isLoading, setIsLoading] = useState(true);
   const [response, setResponse] = useState();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  console.log(store);
-  // console.log("this is the isLoading prop", store.ui.isLoading);
 
   const options = {
     method: "POST",
@@ -70,15 +90,33 @@ const ConfirmBooking = () => {
         <Loader />
       ) : (
         <Wrapper>
-          <form>
-            <h1>BOOKING CONFIRMATION:</h1>
-            <p>City: {response.city.cityName}</p>
-            <p>Date: {response.date}</p>
-            <p>ContactPerson: {response.contactPerson}</p>
-            <p>Email: {response.email}</p>
-            <p>Phone: {response.phone}</p>
-            <p>Address: {response.address}</p>
-          </form>
+          <ContentContainer>
+            <h1>
+              <Span>Perfect!</Span>
+            </h1>
+            <h3>VR Show is coming your way:</h3>
+            <OrderCard>
+              <p>
+                City: <SpanBold>{response.city.cityName}</SpanBold>
+              </p>
+              <p>
+                Date: <SpanBold>{response.date}</SpanBold>
+              </p>
+              <p>
+                ContactPerson: <SpanBold>{response.contactPerson}</SpanBold>
+              </p>
+              <p>
+                Email: <SpanBold>{response.email}</SpanBold>
+              </p>
+              <p>
+                Phone: <SpanBold>{response.phone}</SpanBold>
+              </p>
+              <p>
+                Address: <SpanBold>{response.address}</SpanBold>
+              </p>
+            </OrderCard>
+            <SpaceIcon src={Space} al="planets in galaxy" />
+          </ContentContainer>
         </Wrapper>
       )}
     </>

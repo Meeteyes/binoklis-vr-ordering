@@ -5,6 +5,7 @@ import {
   qualifiesForOvernight,
   getNearByCities,
   stripAwayWeekends,
+  removeDuplicatesAndSort,
 } from "../utils/functions.js";
 import nodemailer from "nodemailer";
 
@@ -45,10 +46,14 @@ router.get("/", async (req, res) => {
             new Date(show.date).withoutTime().getTime() >
             new Date().withoutTime().getTime()
         );
+        console.log("These are nearby shows", nearByShows);
 
         //we have to check if the previous or next date is not a weekend and return the possible dates
 
         let availableDatesAround = stripAwayWeekends(nearByShows);
+
+        // double checks that there are no duplicates and sort the array by ascending date
+        availableDatesAround = removeDuplicatesAndSort(availableDatesAround);
 
         //now we check if those possible dates are actually free
         availableDatesAround = await availableDatesAround.reduce(

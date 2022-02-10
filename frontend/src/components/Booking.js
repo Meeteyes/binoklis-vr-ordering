@@ -9,13 +9,24 @@ import Alternatives from "./Alternatives";
 import ui from "../reducers/ui";
 
 const Wrapper = styled.div`
-  width: 70%;
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 20px 30px;
+  width: 100%;
+  height: 100%;
+  padding-top: 50px;
+  padding-bottom: 20px;
+  background-color: #6ba987;
+`;
+
+const ContentContainer = styled.div`
+  background-color: white;
+  width: 80%;
+  margin: 0px auto;
+  padding: 20px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 20px;
+  border-radius: 20px;
 `;
 
 const Booking = () => {
@@ -70,48 +81,68 @@ const Booking = () => {
 
   return (
     <Wrapper>
-      <Alternatives />
-      <h2> Please, fill the form</h2>
-      <TextField
-        id="name"
-        error={errors.name.length > 0}
-        helperText={errors.name}
-        label="Name"
-        variant="outlined"
-        onChange={(event) => setName(event.target.value)}
-      />
-      <TextField
-        id="email"
-        error={errors.email.length > 0}
-        helperText={errors.email}
-        label="E-mail"
-        variant="outlined"
-        onChange={(event) => setEmail(event.target.value)}
-      />
-      <TextField
-        id="address"
-        label="Address"
-        variant="outlined"
-        onChange={(event) => setAddress(event.target.value)}
-      />
-      <TextField
-        id="phone"
-        label="Phone"
-        error={errors.phone.length > 0}
-        helperText={errors.phone}
-        variant="outlined"
-        onChange={(event) => setPhone(event.target.value)}
-      />
-      <p>City: {store.order.city}</p>
-      <p>Date: {store.order.date}</p>
-      <Button
-        style={{ width: "80%", maxWidth: "250px" }}
-        variant="contained"
-        onClick={() => handleButtonClick()}
-        disabled={email.length < 3 || name.length < 3}
-      >
-        Book
-      </Button>
+      <ContentContainer>
+        <Alternatives />
+        <h2> Please, fill out the form</h2>
+        <TextField
+          id="name"
+          error={errors.name.length > 0}
+          helperText={errors.name}
+          label="Name"
+          variant="outlined"
+          sx={{
+            width: "250px",
+          }}
+          onChange={(event) => setName(event.target.value)}
+        />
+        <TextField
+          id="email"
+          error={errors.email.length > 0}
+          helperText={errors.email}
+          label="E-mail"
+          variant="outlined"
+          sx={{
+            width: "250px",
+          }}
+          onChange={(event) => setEmail(event.target.value)}
+        />
+        <TextField
+          id="address"
+          label="Address"
+          variant="outlined"
+          sx={{
+            width: "250px",
+          }}
+          onChange={(event) => setAddress(event.target.value)}
+        />
+        <TextField
+          id="phone"
+          label="Phone"
+          error={errors.phone.length > 0}
+          helperText={errors.phone}
+          variant="outlined"
+          sx={{
+            width: "250px",
+          }}
+          onChange={(event) => setPhone(event.target.value)}
+        />
+        <p>City: {store.order.city}</p>
+        <p>Date: {store.order.date}</p>
+        <Button
+          sx={{
+            width: "250px",
+            backgroundColor: "#6ba987",
+            ":hover": {
+              backgroundColor: "red",
+            },
+          }}
+          variant="contained"
+          onClick={() => handleButtonClick()}
+          disabled={email.length < 3 || name.length < 3}
+        >
+          Book
+        </Button>
+      </ContentContainer>
     </Wrapper>
   );
 };

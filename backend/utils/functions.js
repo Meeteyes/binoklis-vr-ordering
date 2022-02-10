@@ -77,3 +77,9 @@ export const stripAwayWeekends = (array) => {
   });
   return result;
 };
+
+export const removeDuplicatesAndSort = (arr) => {
+  let workArr = [...new Set(arr)];
+  workArr.sort((a, b) => new Date(a) - new Date(b));
+  return workArr;
+};

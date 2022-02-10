@@ -7,8 +7,7 @@ import { fetchCities } from "../reducers/cities";
 import { createSelectOptions } from "../constants/functions";
 
 const SelectContainer = styled.form`
-  width: 80%;
-  max-width: 500px;
+  width: 250px;
 `;
 
 const SelectCity = () => {
@@ -33,6 +32,7 @@ const SelectCity = () => {
         width="200px"
         options={options}
         onChange={(event) => handleChange(event)}
+        placeholder="City"
       />
     </SelectContainer>
   );

@@ -25,6 +25,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
+    width: "90%",
     padding: theme.spacing(2),
   },
   "& .MuiDialogActions-root": {
@@ -34,7 +35,6 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 const BootstrapDialogTitle = (props) => {
   const { children, onClose, ...other } = props;
-
   return (
     <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
       {children}
@@ -166,49 +166,103 @@ const Popup = () => {
           onClose={handleClose}
           aria-labelledby="customized-dialog-title"
           open={open}
+          sx={{
+            width: "100%",
+          }}
         >
           <BootstrapDialogTitle
             id="customized-dialog-title"
             onClose={handleClose}
+            sx={{
+              width: "600px",
+            }}
           >
             {store.admin.editingOrder.id}
           </BootstrapDialogTitle>
           <DialogContent dividers>
-            <Typography component={"div"} gutterBottom>
+            <Typography
+              sx={{
+                paddingLeft: "50px",
+              }}
+              component={"div"}
+              gutterBottom
+            >
               City: {showToChange.city.cityName}
             </Typography>
-            <Typography component={"div"} gutterBottom>
+            <Typography
+              component={"div"}
+              sx={{
+                paddingLeft: "50px",
+              }}
+              gutterBottom
+            >
               Date: {showToChange.date}
             </Typography>
-            <Typography component={"div"} gutterBottom>
+            <Typography
+              component={"div"}
+              sx={{
+                paddingLeft: "50px",
+              }}
+              gutterBottom
+            >
               <TextField
                 id="name"
+                sx={{
+                  width: "300px",
+                }}
                 label="Contact Person"
                 variant="outlined"
                 defaultValue={contactPerson}
                 onChange={(event) => setContactPerson(event.target.value)}
               />
             </Typography>
-            <Typography component={"div"} gutterBottom>
+            <Typography
+              component={"div"}
+              sx={{
+                paddingLeft: "50px",
+              }}
+              gutterBottom
+            >
               <TextField
                 id="email"
+                sx={{
+                  width: "300px",
+                }}
                 label="E-mail"
                 variant="outlined"
                 defaultValue={email}
                 onChange={(event) => setEmail(event.target.value)}
               />
             </Typography>
-            <Typography component={"div"} gutterBottom>
+            <Typography
+              component={"div"}
+              sx={{
+                paddingLeft: "50px",
+              }}
+              gutterBottom
+            >
               <TextField
                 id="phone"
+                sx={{
+                  width: "300px",
+                }}
                 label="Phone"
                 variant="outlined"
                 defaultValue={phone}
                 onChange={(event) => setPhone(event.target.value)}
               />
             </Typography>
-            <Typography component={"div"} gutterBottom>
+            <Typography
+              component={"div"}
+              sx={{
+                paddingLeft: "50px",
+              }}
+              gutterBottom
+            >
               <TextField
+                sx={{
+                  width: "300px",
+                }}
                 id="address"
                 label="Address"
                 variant="outlined"

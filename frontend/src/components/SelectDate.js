@@ -3,15 +3,10 @@ import { useDispatch } from "react-redux";
 import TextField from "@mui/material/TextField";
 import DatePicker from "@mui/lab/DatePicker";
 import moment from "moment";
-import styled from "styled-components";
+import { styled } from "@mui/material/styles";
 
 import order from "../reducers/order";
 import { URL } from "../constants/URLS";
-
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
 
 // This function strips away the time from Date Object
 Date.prototype.withoutTime = function () {
@@ -19,14 +14,14 @@ Date.prototype.withoutTime = function () {
   d.setHours(10, 0, 0, 0);
   return d;
 };
-
-const SelectContainer = styled.form`
-  width: 80%;
-  max-width: 500px;
+const StyledTextField = styled(TextField)`
+  width: 250px;
+  & .MuiInputBase-input {
+    padding: 8px;
+  }
 `;
 
 const SelectDate = () => {
-  // variables
   const dispatch = useDispatch();
   const today = new Date();
   const [eventDate, setEventDate] = useState();
@@ -83,16 +78,21 @@ const SelectDate = () => {
   }, []);
 
   return (
-    <SelectContainer>
-      <DatePicker
-        minDate={today}
-        label="Datums"
-        value={eventDate}
-        onChange={(newValue) => handleDateSelect(newValue)}
-        shouldDisableDate={disableDays}
-        renderInput={(params) => <TextField {...params} />}
-      />
-    </SelectContainer>
+    <DatePicker
+      minDate={today}
+      // className={classes.picker}
+      sx={{
+        width: 350,
+        "& .MuiFormControl-root-MuiTextField-root": {
+          width: "250px",
+        },
+      }}
+      label="Datums"
+      value={eventDate}
+      onChange={(newValue) => handleDateSelect(newValue)}
+      shouldDisableDate={disableDays}
+      renderInput={(params) => <StyledTextField {...params} />}
+    />
   );
 };
 
