@@ -21,13 +21,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// The backend routes
+app.use("/login", login);
 app.use("/admin", admin);
+app.use("/signup", signup);
+app.use("/updateShow", updateShow);
+
 app.use("/bookedDates", bookedDates);
 app.use("/booking", booking);
 app.use("/cities", cities);
-app.use("/login", login);
-app.use("/signup", signup);
-app.use("/updateShow", updateShow);
 
 // Start the server
 app.listen(port, () => {

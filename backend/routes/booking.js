@@ -7,9 +7,12 @@ import {
   stripAwayWeekends,
   removeDuplicatesAndSort,
 } from "../utils/functions.js";
-import nodemailer from "nodemailer";
+// import nodemailer from "nodemailer";
+import dotenv from "dotenv";
 
+import { main } from "../utils/mailer.js";
 const router = express.Router();
+dotenv.config();
 
 Date.prototype.withoutTime = function () {
   var d = new Date(this);
@@ -20,7 +23,6 @@ Date.prototype.withoutTime = function () {
 // ---- Get route ---
 router.get("/", async (req, res) => {
   const { city, date } = req.query;
-  console.log("this are the query", city, date);
   if (city && date) {
     try {
       // we get the city List and the chosen city
@@ -33,6 +35,7 @@ router.get("/", async (req, res) => {
       }
       // see if the city is far enough (boolean)
       const isOvernight = qualifiesForOvernight(askedCity);
+
       if (isOvernight) {
         // we get all the cities in 100 km radius and check if there are any upcoming shows in one of those cities
         const nearByCities = getNearByCities(cityList, askedCity, 100);
@@ -46,10 +49,8 @@ router.get("/", async (req, res) => {
             new Date(show.date).withoutTime().getTime() >
             new Date().withoutTime().getTime()
         );
-        console.log("These are nearby shows", nearByShows);
 
         //we have to check if the previous or next date is not a weekend and return the possible dates
-
         let availableDatesAround = stripAwayWeekends(nearByShows);
 
         // double checks that there are no duplicates and sort the array by ascending date
@@ -121,32 +122,7 @@ router.post("/", async (req, res) => {
     });
   }
 
-  // code for nodemailer to send an e-mail
-  const main = async () => {
-    // create reusable transporter object using the default SMTP transport
-    let transporter = nodemailer.createTransport({
-      host: "smtp.office365.com",
-      port: 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: "VRbinoklis@outlook.com", // your e-mail
-        pass: "siemens35",
-      },
-    });
-
-    // send mail with defined transport object
-    let info = await transporter.sendMail({
-      from: '"Binoklis" <VRbinoklis@outlook.com>', // sender address
-      to: email, // list of receivers
-      subject: "We received your booking", // Subject line
-      text: "Thank you very much for the booking. Someone form our company will get in touch with you in next 2 days", // plain text body
-      html: `<div><h1>VR show is coming your way</h1><p>Thank you very much for your order. We have registered it and someone form the company will get in touch with you in next two days. If you have any other questions, please write to us at reinis@binoklis.eu</p>`, // html body
-    });
-
-    console.log("Message sent: %s", info.messageId);
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-  };
-  main().catch(console.error);
+  main(email).catch(console.error);
 });
 
 export default router;

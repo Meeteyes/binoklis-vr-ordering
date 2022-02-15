@@ -1,3 +1,4 @@
+// receives a city and determins if the city is far enough from base to consider overnight
 export const qualifiesForOvernight = (showCity) => {
   // here we assign the lat, lon of the base city which is Riga
   const [baseLat, baseLon] = [56.971149, 24.142749];
@@ -14,6 +15,7 @@ export const qualifiesForOvernight = (showCity) => {
   }
 };
 
+// returns array of cities that are within the radius(in km)
 export const getNearByCities = (cityList, showCity, radius) => {
   let result = cityList.filter((item) => {
     const distance = calculateDistance(
@@ -27,6 +29,7 @@ export const getNearByCities = (cityList, showCity, radius) => {
   return result;
 };
 
+// function using Haversine formula to calculate distance between two locations on globe by suing lat and long
 export const calculateDistance = (lat1, lon1, lat2, lon2) => {
   lon1 = (lon1 * Math.PI) / 180;
   lon2 = (lon2 * Math.PI) / 180;
@@ -49,6 +52,7 @@ export const calculateDistance = (lat1, lon1, lat2, lon2) => {
   return c * r;
 };
 
+// returns an array of possible dates without weekends
 export const stripAwayWeekends = (array) => {
   const result = [];
   array.forEach((show) => {
@@ -64,13 +68,11 @@ export const stripAwayWeekends = (array) => {
       previousDay.substr(0, 3) === "Sat" ||
       previousDay.substr(0, 3) === "Sun"
     ) {
-      console.log("Date is on weekend, do nothing");
     } else {
       result.push(previousDay);
     }
 
     if (nextDay.substr(0, 3) === "Sat" || nextDay.substr(0, 3) === "Sun") {
-      console.log("Date is on weekend, do nothing");
     } else {
       result.push(nextDay);
     }
@@ -78,6 +80,7 @@ export const stripAwayWeekends = (array) => {
   return result;
 };
 
+// sorts the array and removes duplicates in case there are some
 export const removeDuplicatesAndSort = (arr) => {
   let workArr = [...new Set(arr)];
   workArr.sort((a, b) => new Date(a) - new Date(b));
