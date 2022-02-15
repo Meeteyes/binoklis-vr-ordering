@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { URL } from "../constants/URLS";
 import ui from "./ui";
 
 const cities = createSlice({
@@ -20,7 +21,7 @@ const cities = createSlice({
 export const fetchCities = () => {
   return (dispatch) => {
     dispatch(ui.actions.setLoading(true));
-    fetch("http://localhost:8080/cities")
+    fetch(URL("cities"))
       .then((res) => res.json())
       .then((json) => {
         dispatch(cities.actions.setList(json.response));
