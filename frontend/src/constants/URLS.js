@@ -1,1 +1,1 @@
-export const URL = (slug) => `http://localhost:8080/${slug}`;
+export const URL = (slug) => `https://binoklis.herokuapp.com${slug}`;
