@@ -1,5 +1,6 @@
 import express from "express";
 import bcrypt from "bcrypt-nodejs";
+import crypto from "crypto";
 
 import Admin from "../models/admin.js";
 
