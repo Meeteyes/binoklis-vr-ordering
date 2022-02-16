@@ -10,6 +10,7 @@ export const main = async (email) => {
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
+      type: "login",
       user: process.env.EMAIL, // your e-mail
       pass: process.env.PASS,
     },
