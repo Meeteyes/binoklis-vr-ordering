@@ -1,8 +1,5 @@
 "use strict";
 import nodemailer from "nodemailer";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 export const main = async (email) => {
   // create reusable transporter object using the default SMTP transport
@@ -13,7 +10,7 @@ export const main = async (email) => {
     auth: {
       type: "login",
       user: process.env.EMAIL, // your e-mail
-      pass: process.env.PASS,
+      pass: process.env.PASSWORD,
     },
   });
 
