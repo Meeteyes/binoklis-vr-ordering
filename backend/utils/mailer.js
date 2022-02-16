@@ -16,7 +16,7 @@ export const main = async (email) => {
 
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: `Binoklis <siabinoklis@outlook.com>`, // sender address
+    from: process.env.EMAIL, // sender address
     to: email, // list of receivers
     subject: "We received your booking", // Subject line
     text: "Thank you very much for the booking. Someone form our company will get in touch with you in next 2 days", // plain text body
