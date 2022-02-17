@@ -34,6 +34,13 @@ const ContentContainer = styled.div`
   gap: 20px;
   border-radius: 20px;
 `;
+
+const Span = styled.span`
+  color: red;
+  font-size: 30px;
+  font-weight: 700;
+`;
+
 const Login = () => {
   const store = useSelector((store) => store);
   const [username, setUsername] = useState("");
@@ -62,7 +69,9 @@ const Login = () => {
     <Wrapper>
       <ContentContainer>
         <Loader />
-        <h1>PLEASE LOGIN</h1>
+        <h1>
+          <Span>Login</Span>
+        </h1>
         <TextField
           sx={{
             width: "250px",
