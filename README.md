@@ -4,9 +4,13 @@ Booking site and show management system built for VR company Binoklis using **Re
 
 ### Tech used:
 
-**React, Node.js, React Router, Redux, Material UI, Styled Components, Nodemailer**
+**React, React Router, Redux, Material UI, Styled Components, Nodemailer**
 
 Additional packages: moment.js, React date picker
+
+## Backend
+
+I developed the Backend for this application which consists of a **RESTful API** built with **Node.js** and **Express** and with data collected via **MongoDB and mongoose**.
 
 ### View it live:
 
