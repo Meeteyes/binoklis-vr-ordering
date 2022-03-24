@@ -22,8 +22,8 @@ const ShowSchema = new mongoose.Schema({
   phone: {
     type: String,
     trim: true,
-    minlenght: "8",
-    maxlength: "8",
+    minlenght: 8,
+    maxlength: 8,
   },
   email: {
     type: String,
