@@ -10,7 +10,7 @@ import Space from "../img/space.png";
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100%;
   padding-top: 50px;
   background-color: #6ba987;
 `;
@@ -28,7 +28,7 @@ const ContentContainer = styled.div`
   border-radius: 20px;
 `;
 const SpaceIcon = styled.img`
-  width: 150px;
+  width: 100px;
 `;
 const Span = styled.span`
   color: red;
@@ -115,7 +115,7 @@ const ConfirmBooking = () => {
                 Address: <SpanBold>{response.address}</SpanBold>
               </p>
             </OrderCard>
-            <SpaceIcon src={Space} al="planets in galaxy" />
+            <SpaceIcon src={Space} alt="planets in galaxy" />
           </ContentContainer>
         </Wrapper>
       )}
