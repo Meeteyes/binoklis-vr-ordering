@@ -63,11 +63,7 @@ const SelectDate = () => {
 
   // function that is being run by each date in the DatePicker, if true => disable the date
   const disableDays = (date) => {
-    if (disabledDates.includes(date.toDateString() || date < new Date())) {
-      return true;
-    } else {
-      return false;
-    }
+    return disabledDates.includes(date.toDateString() || date < new Date());
   };
 
   // In use effect we fetch from API booked dates
@@ -80,7 +76,6 @@ const SelectDate = () => {
   return (
     <DatePicker
       minDate={today}
-      // className={classes.picker}
       sx={{
         width: 350,
         "& .MuiFormControl-root-MuiTextField-root": {

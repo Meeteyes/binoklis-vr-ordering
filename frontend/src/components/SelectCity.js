@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Select from "react-select";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import order from "../reducers/order";
+
 import { fetchCities } from "../reducers/cities";
 import { createSelectOptions } from "../constants/functions";
+import order from "../reducers/order";
 
 const SelectContainer = styled.form`
   width: 250px;

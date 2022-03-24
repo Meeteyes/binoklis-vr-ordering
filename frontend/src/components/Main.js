@@ -64,7 +64,7 @@ const Main = () => {
           style={{ width: "80%", maxWidth: "250px" }}
           variant="contained"
           onClick={() => handleButtonClick()}
-          disabled={store.order.city === null || store.order.date === null}
+          disabled={!store.order.city || !store.order.date}
         >
           Check availability
         </Button>

@@ -7,7 +7,6 @@ import {
   stripAwayWeekends,
   removeDuplicatesAndSort,
 } from "../utils/functions.js";
-// import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 
 import { main } from "../utils/mailer.js";
