@@ -13,8 +13,9 @@ import Loader from "./Loader";
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 100vh;
+  height: fit-content;
   padding-top: 50px;
+  padding-bottom: 50px;
   background-color: #6ba987;
 `;
 

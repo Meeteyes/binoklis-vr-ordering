@@ -10,8 +10,9 @@ import Space from "../img/space.png";
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 100%;
+  height: fit-content;
   padding-top: 50px;
+  padding-bottom: 50px;
   background-color: #6ba987;
 `;
 
